@@ -7,129 +7,341 @@
     <style>
         @import url('https://googleapis.com');
         
-        /* Modern Native Reset Controls */
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; }
-        body { background-color: #fdf8f5; color: #1e293b; padding-bottom: 60px; line-height: 1.5; }
-        
-        /* App Header Layout */
-        header { background: #ffffff; border-b: 1px solid #f1f5f9; padding: 18px 24px; box-shadow: 0 2px 8px rgba(0,0,0,0.04); position: sticky; top: 0; z-index: 100; }
-        .header-container { max-w: 1100px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; }
-        .brand-wrapper { display: flex; align-items: center; gap: 12px; }
-        .chef-badge { background-color: #e05a47; color: white; padding: 10px; border-radius: 12px; font-weight: bold; font-size: 18px; display: flex; align-items: center; justify-content: center; width: 42px; height: 42px; }
-        .logo-title { font-size: 22px; font-weight: 700; color: #0f172a; tracking: -0.5px; }
-        .logo-accent { color: #e05a47; }
-        .logo-sub { font-size: 12px; color: #64748b; margin-top: 1px; }
-        .badge-status { font-size: 12px; font-weight: 600; color: #e05a47; background: #fbeee6; padding: 6px 12px; border-radius: 20px; }
-
-        /* Multi-Column Desktop Dashboard View Structure */
-        .dashboard-container { max-w: 1100px; margin: 30px auto; padding: 0 20px; display: grid; grid-template-columns: 1.1fr 1.4fr; gap: 30px; }
-        @media (max-width: 850px) { .dashboard-container { grid-template-columns: 1fr; gap: 24px; } }
-        
-        .panel-side { display: flex; flex-direction: column; gap: 24px; }
-        .card { background: #ffffff; border: 1px solid #f1f5f9; border-radius: 24px; padding: 24px; box-shadow: 0 4px 20px rgba(15, 23, 42, 0.03); display: flex; flex-direction: column; gap: 16px; }
-        .card-title { font-size: 16px; font-weight: 700; color: #0f172a; display: flex; align-items: center; gap: 8px; border-bottom: 1px solid #f8fafc; padding-bottom: 8px; }
-        
-        /* Interactive Input Components Layout Mapping */
-        .input-group { display: flex; gap: 10px; width: 100%; }
-        input[type="text"] { flex: 1; padding: 14px 18px; background-color: #f8fafc; border: 2px solid #e2e8f0; border-radius: 14px; font-size: 14px; font-weight: 500; outline: none; transition: all 0.2s ease; }
-        input[type="text"]:focus { border-color: #e05a47; background-color: #ffffff; box-shadow: 0 0 0 4px rgba(224, 90, 71, 0.1); }
-        
-        .btn-orange { background-color: #e05a47; color: white; font-weight: 600; border: none; padding: 14px 24px; border-radius: 14px; cursor: pointer; font-size: 14px; transition: all 0.2s ease; white-space: nowrap; }
-        .btn-orange:hover { background-color: #cc4e3c; transform: translateY(-1px); }
-        .btn-dark { background-color: #1e293b; color: white; font-weight: 600; border: none; padding: 16px; border-radius: 14px; cursor: pointer; font-size: 14px; width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px; transition: all 0.2s ease; margin-top: 8px; }
-        .btn-dark:hover { background-color: #0f172a; }
-
-        textarea { width: 100%; padding: 16px; background-color: #f8fafc; border: 2px solid #e2e8f0; border-radius: 14px; font-size: 14px; font-weight: 500; outline: none; resize: vertical; min-height: 160px; transition: all 0.2s ease; }
-        textarea:focus { border-color: #e05a47; background-color: #ffffff; box-shadow: 0 0 0 4px rgba(224, 90, 71, 0.1); }
-
-        /* Configuration Grid View Row Styles */
-        .controls-row { display: grid; grid-template-columns: 1fr 1.2fr; gap: 16px; }
-        .control-box { display: flex; flex-direction: column; gap: 8px; }
-        .control-label { font-size: 12px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.7px; }
-        
-        .counter { display: flex; align-items: center; background: #f8fafc; border: 2px solid #e2e8f0; border-radius: 14px; padding: 6px 12px; justify-content: space-between; }
-        .counter-btn { width: 34px; height: 34px; background: white; border: 1px solid #e2e8f0; border-radius: 10px; font-weight: bold; cursor: pointer; font-size: 16px; transition: background 0.15s; }
-        .counter-btn:hover { background: #f8fafc; }
-        .counter-val { font-size: 15px; font-weight: 700; color: #0f172a; }
-        
-        select { padding: 14px; background: #f8fafc; border: 2px solid #e2e8f0; border-radius: 14px; font-size: 14px; font-weight: 600; outline: none; color: #334155; width: 100%; cursor: pointer; }
-        select:focus { border-color: #e05a47; }
-
-        .system-toggle { display: grid; grid-template-columns: 1fr 1fr; background: #f1f5f9; padding: 4px; border-radius: 14px; height: 46px; align-items: center; }
-        .toggle-btn { height: 38px; border-radius: 10px; border: none; font-size: 13px; font-weight: 700; cursor: pointer; text-align: center; transition: all 0.2s; }
-        .toggle-active { background: white; color: #0f172a; box-shadow: 0 2px 6px rgba(0,0,0,0.06); }
-        .toggle-inactive { background: transparent; color: #64748b; }
-
-        /* Live Canvas Processing Panel States */
-        .empty-state { text-align: center; padding: 60px 20px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; }
-        .empty-icon { width: 56px; height: 56px; background: #fbeee6; color: #e05a47; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px; font-weight: bold; }
-        .empty-title { font-size: 16px; font-weight: 700; color: #334155; }
-        .empty-desc { font-size: 13px; color: #94a3b8; max-width: 320px; margin: 0 auto; line-height: 1.5; }
-
-        .section-header { font-size: 16px; font-weight: 700; color: #0f172a; display: flex; align-items: center; gap: 8px; margin: 24px 0 14px 0; border-bottom: 2px solid #f8fafc; padding-bottom: 8px; }
-        .ingredient-item { background: #f8fafc; border: 1px solid #edf2f7; padding: 14px 16px; border-radius: 14px; margin-bottom: 10px; font-size: 14px; display: flex; gap: 10px; align-items: center; font-weight: 500; }
-        .ingredient-qty { font-weight: 700; color: #e05a47; white-space: nowrap; background: white; padding: 4px 10px; border-radius: 8px; border: 1px solid #edf2f7; }
-        
-        .instructions-box { background: #f8fafc; border: 1px solid #edf2f7; padding: 20px; border-radius: 18px; font-size: 14.5px; line-height: 1.7; color: #334155; white-space: pre-line; }
-        .hidden { display: none !important; }
-    </style>
-</head>
-<body>
-
-    <header>
-        <div class="header-container">
-            <div class="brand-wrapper">
-                <div class="chef-badge">🍳</div>
-                <div>
-                    <h1 class="logo-title">Recipe<span class="logo-accent">Converter</span></h1>
-                    <p class="logo-sub">Create, scale, and tailor recipes instantly</p>
-                </div>
-            </div>
-            <div class="badge-status">🚀 Live MVP</div>
-        </div>
-    </header>
-
-    <div class="dashboard-container">
-        <!-- Left Column: Creator Entry Parameters Container -->
-        <div class="panel-side">
-            <section class="card">
-                <h2 class="card-title">✨ Magic Recipe Generator</h2>
-                <div class="input-group">
-                    <input id="promptInput" type="text" placeholder="e.g., Fudgy Brownies, Garlic Chicken...">
-                    <button onclick="generateFromAI()" class="btn-orange">Generate</button>
-                </div>
-                
-                <div style="margin-top: 8px; border-top: 1px solid #f1f5f9; padding-top: 16px;">
-                    <h2 class="card-title">📝 Paste Custom Ingredients</h2>
-                    <textarea id="recipeInput" placeholder="Paste structural recipe text content here..."></textarea>
-                </div>
-
-                <button onclick="processRecipe()" class="btn-dark">
-                    🚀 Parse & Transform Recipe
-                </button>
-            </section>
-
-            <!-- Modifier Selector Card Components Mapping Row -->
-            <section class="card">
-                <div class="controls-row">
-                    <div class="control-box">
-                        <label class="control-label">Serving Scale</label>
-                        <div class="counter">
-                            <button onclick="adjustMultiplier(-0.5)" class="counter-btn">-</button>
-                            <span id="multiplierValue" class="counter-val">1x</span>
-                            <button onclick="adjustMultiplier(0.5)" class="counter-btn">+</button>
-                        </div>
-                    </div>
-                    <div class="control-box">
-                        <label class="control-label">Measurement System</label>
-                        <div class="system-toggle">
-                            <button id="unitUS" onclick="setUnitSystem('US')" class="toggle-btn toggle-active">US Cups</button>
-                            <button id="unitMetric" onclick="setUnitSystem('Metric')" class="toggle-btn toggle-inactive">Metric</button>
-                        </div>
-                    </div>
-                </div>
-                <div class="control-box" style="margin-top: 4px;">
-                    <label class="control-label">Dietary Alternative Modifier</label>
-                    <select id="dietToggle" onchange="applyDietaryFilter()">
-                        <option value="original">✨ Original Recipe Ingredients</option>
-                        <option value="vegan">🌱 Vegan Swaps Alternative</option>
+        * { 
+            box-sizing: border-box; 
+            margin: 0; 
+            padding: 0; 
+            font-family: 'Plus Jakarta Sans', sans-serif; 
+        }
+        body { 
+            background-color: #fdf8f5; 
+            color: #1e293b; 
+            padding-bottom: 60px; 
+            line-height: 1.5; 
+        }
+        header { 
+            background: #ffffff; 
+            border-b: 1px solid #f1f5f9; 
+            padding: 18px 24px; 
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04); 
+            position: sticky; 
+            top: 0; 
+            z-index: 100; 
+        }
+        .header-container { 
+            max-w: 1100px; 
+            margin: 0 auto; 
+            display: flex; 
+            align-items: center; 
+            justify-content: space-between; 
+        }
+        .brand-wrapper { 
+            display: flex; 
+            align-items: center; 
+            gap: 12px; 
+        }
+        .chef-badge { 
+            background-color: #e05a47; 
+            color: white; 
+            padding: 10px; 
+            border-radius: 12px; 
+            font-weight: bold; 
+            font-size: 18px; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            width: 42px; 
+            height: 42px; 
+        }
+        .logo-title { 
+            font-size: 22px; 
+            font-weight: 700; 
+            color: #0f172a; 
+            tracking: -0.5px; 
+        }
+        .logo-accent { 
+            color: #e05a47; 
+        }
+        .logo-sub { 
+            font-size: 12px; 
+            color: #64748b; 
+            margin-top: 1px; 
+        }
+        .badge-status { 
+            font-size: 12px; 
+            font-weight: 600; 
+            color: #e05a47; 
+            background: #fbeee6; 
+            padding: 6px 12px; 
+            border-radius: 20px; 
+        }
+        .dashboard-container { 
+            max-w: 1100px; 
+            margin: 30px auto; 
+            padding: 0 20px; 
+            display: grid; 
+            grid-template-columns: 1.1fr 1.4fr; 
+            gap: 30px; 
+        }
+        @media (max-width: 850px) { 
+            .dashboard-container { 
+                grid-template-columns: 1fr; 
+                gap: 24px; 
+            } 
+        }
+        .panel-side { 
+            display: flex; 
+            flex-direction: column; 
+            gap: 24px; 
+        }
+        .card { 
+            background: #ffffff; 
+            border: 1px solid #f1f5f9; 
+            border-radius: 24px; 
+            padding: 24px; 
+            box-shadow: 0 4px 20px rgba(15, 23, 42, 0.03); 
+            display: flex; 
+            flex-direction: column; 
+            gap: 16px; 
+        }
+        .card-title { 
+            font-size: 16px; 
+            font-weight: 700; 
+            color: #0f172a; 
+            display: flex; 
+            align-items: center; 
+            gap: 8px; 
+            border-bottom: 1px solid #f8fafc; 
+            padding-bottom: 8px; 
+        }
+        .input-group { 
+            display: flex; 
+            gap: 10px; 
+            width: 100%; 
+        }
+        input[type="text"] { 
+            flex: 1; 
+            padding: 14px 18px; 
+            background-color: #f8fafc; 
+            border: 2px solid #e2e8f0; 
+            border-radius: 14px; 
+            font-size: 14px; 
+            font-weight: 500; 
+            outline: none; 
+            transition: all 0.2s ease; 
+        }
+        input[type="text"]:focus { 
+            border-color: #e05a47; 
+            background-color: #ffffff; 
+            box-shadow: 0 0 0 4px rgba(224, 90, 71, 0.1); 
+        }
+        .btn-orange { 
+            background-color: #e05a47; 
+            color: white; 
+            font-weight: 600; 
+            border: none; 
+            padding: 14px 24px; 
+            border-radius: 14px; 
+            cursor: pointer; 
+            font-size: 14px; 
+            transition: all 0.2s ease; 
+            white-space: nowrap; 
+        }
+        .btn-orange:hover { 
+            background-color: #cc4e3c; 
+            transform: translateY(-1px); 
+        }
+        .btn-dark { 
+            background-color: #1e293b; 
+            color: white; 
+            font-weight: 600; 
+            border: none; 
+            padding: 16px; 
+            border-radius: 14px; 
+            cursor: pointer; 
+            font-size: 14px; 
+            width: 100%; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            gap: 8px; 
+            transition: all 0.2s ease; 
+            margin-top: 8px; 
+        }
+        .btn-dark:hover { 
+            background-color: #0f172a; 
+        }
+        textarea { 
+            width: 100%; 
+            padding: 16px; 
+            background-color: #f8fafc; 
+            border: 2px solid #e2e8f0; 
+            border-radius: 14px; 
+            font-size: 14px; 
+            font-weight: 500; 
+            outline: none; 
+            resize: vertical; 
+            min-height: 160px; 
+            transition: all 0.2s ease; 
+        }
+        textarea:focus { 
+            border-color: #e05a47; 
+            background-color: #ffffff; 
+            box-shadow: 0 0 0 4px rgba(224, 90, 71, 0.1); 
+        }
+        .controls-row { 
+            display: grid; 
+            grid-template-columns: 1fr 1.2fr; 
+            gap: 16px; 
+        }
+        .control-box { 
+            display: flex; 
+            flex-direction: column; 
+            gap: 8px; 
+        }
+        .control-label { 
+            font-size: 12px; 
+            font-weight: 700; 
+            color: #64748b; 
+            text-transform: uppercase; 
+            letter-spacing: 0.7px; 
+        }
+        .counter { 
+            display: flex; 
+            align-items: center; 
+            background: #f8fafc; 
+            border: 2px solid #e2e8f0; 
+            border-radius: 14px; 
+            padding: 6px 12px; 
+            justify-content: space-between; 
+        }
+        .counter-btn { 
+            width: 34px; 
+            height: 34px; 
+            background: white; 
+            border: 1px solid #e2e8f0; 
+            border-radius: 10px; 
+            font-weight: bold; 
+            cursor: pointer; 
+            font-size: 16px; 
+            transition: background 0.15s; 
+        }
+        .counter-btn:hover { 
+            background: #f8fafc; 
+        }
+        .counter-val { 
+            font-size: 15px; 
+            font-weight: 700; 
+            color: #0f172a; 
+        }
+        select { 
+            padding: 14px; 
+            background: #f8fafc; 
+            border: 2px solid #e2e8f0; 
+            border-radius: 14px; 
+            font-size: 14px; 
+            font-weight: 600; 
+            outline: none; 
+            color: #334155; 
+            width: 100%; 
+            cursor: pointer; 
+        }
+        select:focus { 
+            border-color: #e05a47; 
+        }
+        .system-toggle { 
+            display: grid; 
+            grid-template-columns: 1fr 1fr; 
+            background: #f1f5f9; 
+            padding: 4px; 
+            border-radius: 14px; 
+            height: 46px; 
+            align-items: center; 
+        }
+        .toggle-btn { 
+            height: 38px; 
+            border-radius: 10px; 
+            border: none; 
+            font-size: 13px; 
+            font-weight: 700; 
+            cursor: pointer; 
+            text-align: center; 
+            transition: all 0.2s; 
+        }
+        .toggle-active { 
+            background: white; 
+            color: #0f172a; 
+            box-shadow: 0 2px 6px rgba(0,0,0,0.06); 
+        }
+        .toggle-inactive { 
+            background: transparent; 
+            color: #64748b; 
+        }
+        .empty-state { 
+            text-align: center; 
+            padding: 60px 20px; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            justify-content: center; 
+            gap: 12px; 
+        }
+        .empty-icon { 
+            width: 56px; 
+            height: 56px; 
+            background: #fbeee6; 
+            color: #e05a47; 
+            border-radius: 50%; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            font-size: 24px; 
+            font-weight: bold; 
+        }
+        .empty-title { 
+            font-size: 16px; 
+            font-weight: 700; 
+            color: #334155; 
+            }
+        .empty-desc { 
+            font-size: 13px; 
+            color: #94a3b8; 
+            max-width: 320px; 
+            margin: 0 auto; 
+            line-height: 1.5; 
+        }
+        .section-header { 
+            font-size: 16px; 
+            font-weight: 700; 
+            color: #0f172a; 
+            display: flex; 
+            align-items: center; 
+            gap: 8px; 
+            margin: 24px 0 14px 0; 
+            border-bottom: 2px solid #f8fafc; 
+            padding-bottom: 8px; 
+        }
+        .ingredient-item { 
+            background: #f8fafc; 
+            border: 1px solid #edf2f7; 
+            padding: 14px 16px; 
+            border-radius: 14px; 
+            margin-bottom: 10px; 
+            font-size: 14px; 
+            display: flex; 
+            gap: 10px; 
+            align-items: center; 
+            font-weight: 500; 
+        }
+        .ingredient-qty { 
+            font-weight: 700; 
+            color: #e05a47; 
+            white-space: nowrap; 
+            background: white; 
+            padding: 4px 10px; 
+            border-radius: 8px; 
+            border: 1px solid #edf2f7; 
+        }
+        .instructions-box { 
+            background: #f8fafc; 
+    
